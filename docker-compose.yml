@@ -1,0 +1,54 @@
+version: "3.9"
+services:
+  app:
+    image: ubuntu
+    stdin_open: true
+    tty: true
+    ports:
+      - "8889:8090"
+      - "8888:8080"
+    # networks:
+    #   network:
+    volumes:
+      - ./:/app/
+    # deploy:
+    #   resources:
+    #     reservations:
+    #       devices:
+    #         - driver: nvidia
+    #           device_ids: ['0']
+    #           capabilities: [gpu]
+    # command: bash /app/start.sh
+    restart: always
+  cache:
+    image: redis
+    stdin_open: true
+    tty: true
+    ports:
+      - "6379:6379"
+    # networks:
+    #   network:
+    restart: always
+  queue:
+    image: rabbitmq:3.9.29-management
+    stdin_open: true
+    tty: true
+    ports:
+      - "5672:5672"
+      - "15672:15672"
+    restart: always
+    # networks:
+    #   network:
+  lb:
+    image: nginx
+    stdin_open: true
+    tty: true
+    ports:
+      - "8880:80"
+    # networks:
+    #   network:
+    restart: always
+# networks:
+#   network:
+#     name: heidi
+#     external: true
